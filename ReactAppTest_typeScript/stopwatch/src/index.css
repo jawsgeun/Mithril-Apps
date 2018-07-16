@@ -1,0 +1,22 @@
+:local .root {
+  border: 1px solid #DB19E0;
+  display: inline-block;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: center;
+  width: 250px;
+}
+
+:local .time {
+  font-size: 30px;
+}
+
+:local .start {
+  font-size: 20px;
+  color: #4DB850;
+}
+
+:local .stop {
+  font-size: 20px;
+  color: #F13A2C;
+}
