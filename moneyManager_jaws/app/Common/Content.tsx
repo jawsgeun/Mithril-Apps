@@ -2,10 +2,10 @@ import * as m from 'mithril'
 import Header from './Header'
 
 class Content implements m.ClassComponent<{}> {
-  view(vnode){
+  view(vnode) {
     return (
       <div>
-        <Header/>        
+        <Header />
         {vnode.children}
       </div>
     )

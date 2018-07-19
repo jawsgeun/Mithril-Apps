@@ -1,11 +1,12 @@
 /// <reference path='index.d.ts'/>
 
 import * as m from 'mithril';
+import SampleComponent from './SampleComponent'
 import './index.css';
 
 class App implements m.ClassComponent<{}> {
     view() {
-      return <div class='message'>Hello Mithril with JSX</div>;
+      return <SampleComponent attr = '테스트 속성'/>;
     }
 }
 

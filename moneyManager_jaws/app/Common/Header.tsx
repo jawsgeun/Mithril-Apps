@@ -2,13 +2,13 @@ import * as m from 'mithril';
 import './Header.css'
 
 class Header implements m.Component<{}>{
-  onClickInput = ()=>{
+  onClickInput = () => {
     m.route.set('/input')
   }
-  onClickStat = ()=>{
+  onClickStat = () => {
     m.route.set('/stat')
   }
-  view(){
+  view() {
     return (
       <div class='menu'>
         <div class="menu-item" onclick={this.onClickInput}>수입 / 지출 입력</div>

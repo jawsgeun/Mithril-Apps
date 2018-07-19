@@ -9,27 +9,26 @@ class Input implements m.ClassComponent<{}>{
   private moneyPick: string = '';
   private incomePick: string = '';
   private detail: string = '';
-  private itemList: Array<ItemViewModel>;
+  private itemList: Array<Array<string>>;
   private year: string;
   private month: string;
   private day: string;
-  private testData: Array<Array<string>> = [
-    ['3000원', '현금', '수입', 'test1'],
-    ['4000원', '현금', '지출', 'test2'],
-    ['5000원', '카드', '수입', 'test3'],
-  ]
+  private key: number;
 
-  public oninit(vnode) {
+  public oninit() {
     this.year = new Date().getFullYear().toString();
     this.month = (new Date().getMonth() + 1).toString();
     this.day = new Date().getDate().toString();
-    this.itemList = this.testData.map((v: Array<string>) => {
-      return new ItemViewModel(v[0], v[1], v[2], v[3]);
-    })
+    this.listUp();
+    this.key = this.itemList == null ? 0 : this.itemList.length;
+  }
+  public onbeforeupdate(){
+    this.key = this.itemList == null ? 0 : this.itemList.length;
   }
   public onSubmit = () => {
     if (this.checkEmpty()) {
-      this.itemList.push(new ItemViewModel(this.amount, this.moneyPick, this.incomePick, this.detail))
+      this.itemList.push([this.key.toString(), this.amount + '원', this.moneyPick, this.incomePick, this.detail])
+      this.key++;
       alert('완료되었습니다.')
       localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(this.itemList);
     }
@@ -71,6 +70,24 @@ class Input implements m.ClassComponent<{}>{
   }
   private listUp = (): void => {
     this.itemList = JSON.parse(localStorage.getItem(this.year + '.' + this.month + '.' + this.day));
+    if (this.itemList == null) {
+      this.itemList = []
+    }
+  }
+  private onItemDelete = (key: string): void => {
+    this.itemList = this.itemList.filter(item => {
+      return item[0] != key;
+    })
+    localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(this.itemList);
+  }
+  private onItemUpdate = (key: string, amount: string, moneyPick: string, incomePick: string, detail: string): void => {
+    this.itemList = this.itemList.map(item => {
+      if (item[0] == key) {
+        return [key, amount, moneyPick, incomePick, detail];
+      }
+      return item;
+    })
+    localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(this.itemList);
   }
   public view(vnode) {
     return (
@@ -90,8 +107,8 @@ class Input implements m.ClassComponent<{}>{
         <h2>상세 정보 입력</h2>
         <textarea rows="3" cols="50" id='input_detail'
           oninput={m.withAttr('value', this.onDetailChange)} placeholder='상세정보를 입력하세요.' />
-        <ItemListView itemList={this.itemList} />
         <button onclick={this.onSubmit}>등록 하기</button>
+        <ItemListView funcUpdate={this.onItemUpdate} funcDelete={this.onItemDelete} itemList={this.itemList} />
       </div>
     )
   }

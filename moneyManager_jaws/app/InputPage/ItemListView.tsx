@@ -3,19 +3,29 @@ import ItemViewModel from './ItemViewModel'
 import ItemView from './ItemView';
 
 interface ListAttrs {
-  itemList: Array<ItemViewModel>;
+  itemList: Array<Array<string>>;
+  funcDelete: Function;
+  funcUpdate: Function;
 }
 export default class ItemListView implements m.ClassComponent<ListAttrs>{
   __attrs: ListAttrs;
   private itemList: Array<JSX.Element>;
   public oninit(vnode: m.CVnode<ListAttrs>) {
-    this.itemList = vnode.attrs.itemList.map((value: ItemViewModel): JSX.Element => {
-      return <ItemView key={vnode.attrs.itemList.indexOf(value)} item={value} />
+    if (vnode.attrs.itemList.length == 0) {
+      this.itemList = [<div><h1>내역이 없습니다.</h1></div>];
+      return;
+    }
+    this.itemList = vnode.attrs.itemList.map((v: Array<string>): JSX.Element => {
+      return <ItemView funcUpdate={vnode.attrs.funcUpdate} funcDelete={vnode.attrs.funcDelete} item={new ItemViewModel(v[0], v[1], v[2], v[3], v[4])} />
     });
   }
   public onbeforeupdate(vnode: m.CVnode<ListAttrs>) {
-    this.itemList = vnode.attrs.itemList.map((value: ItemViewModel): JSX.Element => {
-      return <ItemView key={vnode.attrs.itemList.indexOf(value)} item={value} />
+    if (vnode.attrs.itemList.length == 0) {
+      this.itemList = [<div><h1>내역이 없습니다.</h1></div>];
+      return;
+    }
+    this.itemList = vnode.attrs.itemList.map((v: Array<string>): JSX.Element => {
+      return <ItemView funcUpdate={vnode.attrs.funcUpdate} funcDelete={vnode.attrs.funcDelete} item={new ItemViewModel(v[0], v[1], v[2], v[3], v[4])} />
     });
   }
   public view() {
