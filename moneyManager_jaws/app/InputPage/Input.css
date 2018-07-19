@@ -1,0 +1,13 @@
+
+.docs-example {
+  position: relative;
+  padding: 1em;
+  border: 1px solid #d8d8d8;
+  margin: 1.5rem 1rem 1rem;
+}
+.money_input {
+  height: 2.5em;
+}
+.detail_input {
+  width: 50%;
+}
