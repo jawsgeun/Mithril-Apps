@@ -11,3 +11,7 @@
 .detail_input {
   width: 50%;
 }
+.date_input {
+  width: 4em;
+  height: 2.5em;
+}

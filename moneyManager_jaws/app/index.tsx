@@ -18,12 +18,12 @@ import Statistics from './StatisticsPage/Statistics'
 m.route(document.body, "/input", {
   "/input": {
     view() {
-      return <Content><Input/></Content>
+      return <Content><Input /></Content>
     }
   },
   "/stat": {
     view() {
-      return <Content><Statistics/></Content>
+      return <Content><Statistics /></Content>
     }
   },
 })

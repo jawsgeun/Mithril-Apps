@@ -9,16 +9,21 @@ class Input implements m.ClassComponent<{}>{
   private moneyPick: string = '';
   private incomePick: string = '';
   private detail: string = '';
-
-  private dumpData: Array<Array<string>> = [
+  private itemList: Array<ItemViewModel>;
+  private year: string;
+  private month: string;
+  private day: string;
+  private testData: Array<Array<string>> = [
     ['3000원', '현금', '수입', 'test1'],
     ['4000원', '현금', '지출', 'test2'],
     ['5000원', '카드', '수입', 'test3'],
   ]
-  private itemList: Array<ItemViewModel>;
+
   public oninit(vnode) {
-    vnode.state.date = Input.convertDate(new Date());
-    this.itemList = this.dumpData.map((v: Array<string>) => {
+    this.year = new Date().getFullYear().toString();
+    this.month = (new Date().getMonth() + 1).toString();
+    this.day = new Date().getDate().toString();
+    this.itemList = this.testData.map((v: Array<string>) => {
       return new ItemViewModel(v[0], v[1], v[2], v[3]);
     })
   }
@@ -26,6 +31,7 @@ class Input implements m.ClassComponent<{}>{
     if (this.checkEmpty()) {
       this.itemList.push(new ItemViewModel(this.amount, this.moneyPick, this.incomePick, this.detail))
       alert('완료되었습니다.')
+      localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(this.itemList);
     }
   }
   public checkEmpty(): boolean {
@@ -42,11 +48,11 @@ class Input implements m.ClassComponent<{}>{
     }
     return false;
   }
-  private onAmountChange = (e: KeyboardEvent): void => {
-    this.amount = (e.target as HTMLInputElement).value;
+  private onAmountChange = (amount: string): void => {
+    this.amount = amount;
   }
-  private onDetailChange = (e: KeyboardEvent): void => {
-    this.detail = (e.target as HTMLTextAreaElement).value;
+  private onDetailChange = (detail: string): void => {
+    this.detail = detail;
   }
   private onMoneyRadioClick = (choice: string) => {
     this.moneyPick = choice;
@@ -54,30 +60,40 @@ class Input implements m.ClassComponent<{}>{
   private onIncomeRadioClick = (choice: string) => {
     this.incomePick = choice;
   }
+  private setYear = (year: string): void => {
+    this.year = year;
+  }
+  private setMonth = (month: string): void => {
+    this.month = month;
+  }
+  private setDay = (day: string): void => {
+    this.day = day;
+  }
+  private listUp = (): void => {
+    this.itemList = JSON.parse(localStorage.getItem(this.year + '.' + this.month + '.' + this.day));
+  }
   public view(vnode) {
     return (
       <div className='docs-example'>
         <h1>
-          {vnode.state.date}&nbsp;&nbsp;
-          <button>달력에서 조회</button>
+          <input type='number' className='date_input' id='date_year' value={this.year} oninput={m.withAttr('value', this.setYear)} />년
+          <input type='number' className='date_input' id='date_month' value={this.month} oninput={m.withAttr('value', this.setMonth)} />월
+          <input type='number' className='date_input' id='date_day' value={this.day} oninput={m.withAttr('value', this.setDay)} />일
+          &nbsp;&nbsp;
+          <button onclick={this.listUp}>내역 조회</button>
         </h1>
         <input type='number' id='input_amount' className='money_input'
-          onchange={this.onAmountChange} placeholder='금액을 입력하세요' />&nbsp;원
+          oninput={m.withAttr('value', this.onAmountChange)} placeholder='금액을 입력하세요' />&nbsp;원
         <SelectView formTitle='카드/현금 선택' subTitle={['카드', '현금']} ids={['credit', 'cash']} onClickEvent={this.onMoneyRadioClick} />
         <hr />
         <SelectView formTitle='수입/지출 선택' subTitle={['수입', '지출']} ids={['income', 'outcome']} onClickEvent={this.onIncomeRadioClick} />
         <h2>상세 정보 입력</h2>
-        <textarea rows="3" cols="50" id='input_detail' 
-          onchange={this.onDetailChange} placeholder='상세정보를 입력하세요.' />
+        <textarea rows="3" cols="50" id='input_detail'
+          oninput={m.withAttr('value', this.onDetailChange)} placeholder='상세정보를 입력하세요.' />
         <ItemListView itemList={this.itemList} />
         <button onclick={this.onSubmit}>등록 하기</button>
       </div>
     )
-  }
-  public static convertDate(date: Date): string {
-    return date.getFullYear() + '년' +
-      (date.getMonth() + 1) + '월' +
-      date.getDate() + '일';
   }
 }
 
