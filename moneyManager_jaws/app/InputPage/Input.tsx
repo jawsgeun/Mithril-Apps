@@ -2,7 +2,6 @@ import * as m from 'mithril'
 import SelectView from './SelectView'
 import './Input.css'
 import ItemListView from './ItemListView'
-import ItemViewModel from './ItemViewModel'
 
 class Input implements m.ClassComponent<{}>{
   private amount: string = '';
@@ -14,7 +13,7 @@ class Input implements m.ClassComponent<{}>{
   private month: string;
   private day: string;
   private key: number;
-
+  
   public oninit() {
     this.year = new Date().getFullYear().toString();
     this.month = (new Date().getMonth() + 1).toString();
@@ -93,11 +92,11 @@ class Input implements m.ClassComponent<{}>{
     return (
       <div className='docs-example'>
         <h1>
-          <input type='number' className='date_input' id='date_year' value={this.year} oninput={m.withAttr('value', this.setYear)} />년
-          <input type='number' className='date_input' id='date_month' value={this.month} oninput={m.withAttr('value', this.setMonth)} />월
-          <input type='number' className='date_input' id='date_day' value={this.day} oninput={m.withAttr('value', this.setDay)} />일
+          <input type='number' class='date_input' id='date_year' value={this.year} oninput={m.withAttr('value', this.setYear)} />년
+          <input type='number' class='date_input' id='date_month' value={this.month} oninput={m.withAttr('value', this.setMonth)} />월
+          <input type='number' class='date_input' id='date_day' value={this.day} oninput={m.withAttr('value', this.setDay)} />일
           &nbsp;&nbsp;
-          <button onclick={this.listUp}>내역 조회</button>
+          <button type="button" class="btn btn-primary" onclick={this.listUp}>내역 조회</button>
         </h1>
         <input type='number' id='input_amount' className='money_input'
           oninput={m.withAttr('value', this.onAmountChange)} placeholder='금액을 입력하세요' />&nbsp;원
