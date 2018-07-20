@@ -1,4 +1,6 @@
 import * as m from 'mithril'
+import './SelectView.css'
+import './Input.css'
 
 interface Attrs {
   formTitle: string;
@@ -28,20 +30,21 @@ export default class SelectView implements m.ClassComponent<Attrs> {
         this.propsFunc('지출');
         break;
     }
-
   }
   public view(vnode: m.CVnode<Attrs>) {
     return (
       <form className='form_select'>
         <fieldset>
-          <legend>{vnode.attrs.formTitle}</legend>
+          <label class='input_label'>{vnode.attrs.formTitle}</label>
           <div>
             <input type='radio' id={vnode.attrs.ids[0]} name='radio' onchange={this.onClick} />
-            <label>{vnode.attrs.subTitle[0]}</label>&nbsp;&nbsp;&nbsp;
-            </div>
+            &nbsp;&nbsp;
+            <label class='radio_label'>{vnode.attrs.subTitle[0]}</label>
+          </div>
           <div>
             <input type='radio' id={vnode.attrs.ids[1]} name='radio' onchange={this.onClick} />
-            <label>{vnode.attrs.subTitle[1]}</label>
+            &nbsp;&nbsp;
+            <label class='radio_label'>{vnode.attrs.subTitle[1]}</label>
           </div>
         </fieldset>
       </form>

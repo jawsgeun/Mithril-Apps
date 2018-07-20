@@ -2,72 +2,65 @@ import * as m from 'mithril'
 import SelectView from './SelectView'
 import './Input.css'
 import ItemListView from './ItemListView'
+import * as stream from 'mithril/stream'
 
 class Input implements m.ClassComponent<{}>{
-  private amount: string = '';
-  private moneyPick: string = '';
-  private incomePick: string = '';
-  private detail: string = '';
+  private amount: stream.Stream<string> = stream('');
+  private moneyPick: stream.Stream<string> = stream('');
+  private incomePick: stream.Stream<string> = stream('');
+  private detail: stream.Stream<string> = stream('');
   private itemList: Array<Array<string>>;
-  private year: string;
-  private month: string;
-  private day: string;
+  private year: stream.Stream<number>;
+  private month: stream.Stream<number>;
+  private day: stream.Stream<number>;
   private key: number;
-  
+
   public oninit() {
-    this.year = new Date().getFullYear().toString();
-    this.month = (new Date().getMonth() + 1).toString();
-    this.day = new Date().getDate().toString();
+    this.year = stream(new Date().getFullYear());
+    this.month = stream(new Date().getMonth() + 1);
+    this.day = stream(new Date().getDate());
     this.listUp();
     this.key = this.itemList == null ? 0 : this.itemList.length;
   }
-  public onbeforeupdate(){
+  public onbeforeupdate() {
     this.key = this.itemList == null ? 0 : this.itemList.length;
   }
   public onSubmit = () => {
     if (this.checkEmpty()) {
-      this.itemList.push([this.key.toString(), this.amount + '원', this.moneyPick, this.incomePick, this.detail])
+      this.itemList.push([this.key.toString(), this.amount() + '원', this.moneyPick(), this.incomePick(), this.detail()])
       this.key++;
       alert('완료되었습니다.')
       localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(this.itemList);
+      this.onCancle();
     }
   }
+  public onCancle = () => {
+    this.amount('');
+    this.detail('');
+  }
   public checkEmpty(): boolean {
-    if (this.amount == '') {
+    if (this.amount() == '') {
       alert('금액을 입력하세요!')
-    } else if (this.incomePick == '') {
+    } else if (this.incomePick() == '') {
       alert('수입과 지출 중 한 가지를 선택하세요!')
-    } else if (this.moneyPick == '') {
+    } else if (this.moneyPick() == '') {
       alert('카드와 현금 중 한 가지를 선택하세요!')
-    } else if (this.detail == '') {
+    } else if (this.detail() == '') {
       alert('상세 정보를 입력하세요!')
     } else {
       return true;
     }
     return false;
   }
-  private onAmountChange = (amount: string): void => {
-    this.amount = amount;
-  }
-  private onDetailChange = (detail: string): void => {
-    this.detail = detail;
-  }
-  private onMoneyRadioClick = (choice: string) => {
-    this.moneyPick = choice;
-  }
-  private onIncomeRadioClick = (choice: string) => {
-    this.incomePick = choice;
-  }
-  private setYear = (year: string): void => {
-    this.year = year;
-  }
-  private setMonth = (month: string): void => {
-    this.month = month;
-  }
-  private setDay = (day: string): void => {
-    this.day = day;
-  }
   private listUp = (): void => {
+    if (this.month() < 1 || this.month() > 12) {
+      alert('1월부터 12월 까지만 입력해주세요.')
+      return;
+    }
+    if (this.day() < 1 || this.day() > 31) {
+      alert('1일부터 31일 까지만 입력해주세요.')
+      return;
+    }
     this.itemList = JSON.parse(localStorage.getItem(this.year + '.' + this.month + '.' + this.day));
     if (this.itemList == null) {
       this.itemList = []
@@ -88,25 +81,28 @@ class Input implements m.ClassComponent<{}>{
     })
     localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(this.itemList);
   }
-  public view(vnode) {
+  public view() {
     return (
-      <div className='docs-example'>
-        <h1>
-          <input type='number' class='date_input' id='date_year' value={this.year} oninput={m.withAttr('value', this.setYear)} />년
-          <input type='number' class='date_input' id='date_month' value={this.month} oninput={m.withAttr('value', this.setMonth)} />월
-          <input type='number' class='date_input' id='date_day' value={this.day} oninput={m.withAttr('value', this.setDay)} />일
-          &nbsp;&nbsp;
-          <button type="button" class="btn btn-primary" onclick={this.listUp}>내역 조회</button>
-        </h1>
-        <input type='number' id='input_amount' className='money_input'
-          oninput={m.withAttr('value', this.onAmountChange)} placeholder='금액을 입력하세요' />&nbsp;원
-        <SelectView formTitle='카드/현금 선택' subTitle={['카드', '현금']} ids={['credit', 'cash']} onClickEvent={this.onMoneyRadioClick} />
+      <div class='docs-example'>
+        <input type='number' class='date_input' id='date_year' value={this.year()} oninput={m.withAttr('value', this.year)} />년
+        <input type='number' class='date_input' id='date_month' value={this.month()} oninput={m.withAttr('value', this.month)} />월
+        <input type='number' class='date_input' id='date_day' value={this.day()} oninput={m.withAttr('value', this.day)} />일
+        &nbsp;&nbsp;
+        <button type='button' class='btn btn-primary' onclick={this.listUp}>내역 조회</button>
+        <div>
+          <label class='input_label' >금액</label><br />
+          <input type='number' class='form-control' id='input_amount' className='money_input' value={this.amount()}
+            oninput={m.withAttr('value', this.amount)} placeholder='금액을 입력하세요' />&nbsp;원
+        </div>
+        <SelectView formTitle='카드/현금 선택' subTitle={['카드', '현금']} ids={['credit', 'cash']} onClickEvent={this.moneyPick} />
         <hr />
-        <SelectView formTitle='수입/지출 선택' subTitle={['수입', '지출']} ids={['income', 'outcome']} onClickEvent={this.onIncomeRadioClick} />
-        <h2>상세 정보 입력</h2>
-        <textarea rows="3" cols="50" id='input_detail'
-          oninput={m.withAttr('value', this.onDetailChange)} placeholder='상세정보를 입력하세요.' />
-        <button onclick={this.onSubmit}>등록 하기</button>
+        <SelectView formTitle='수입/지출 선택' subTitle={['수입', '지출']} ids={['income', 'outcome']} onClickEvent={this.incomePick} />
+        <label class='input_label' >상세 정보 입력</label><br />
+        <textarea rows='3' cols='50' id='input_detail' value={this.detail()}
+          oninput={m.withAttr('value', this.detail)} placeholder='상세정보를 입력하세요.' />
+        <br />
+        <button class='btn btn-primary' onclick={this.onSubmit}>등록</button>&nbsp;&nbsp;
+        <button class='btn btn-danger' onclick={this.onCancle}>취소</button>
         <ItemListView funcUpdate={this.onItemUpdate} funcDelete={this.onItemDelete} itemList={this.itemList} />
       </div>
     )

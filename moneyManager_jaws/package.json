@@ -23,6 +23,8 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
+    "bootstrap": "^4.1.2",
+    "jquery": "^3.3.1",
     "mithril": "^1.1.6"
   }
 }

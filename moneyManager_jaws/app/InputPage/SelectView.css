@@ -1,3 +1,10 @@
 .form_select{
   margin-top : 1em;
 }
+.radio_label {
+  display: inline-block;
+  margin-bottom: .5rem;
+  margin-top: .5rem;
+  font-size: 1.0rem;
+  color: #000000;
+}
