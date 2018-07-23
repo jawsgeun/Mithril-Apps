@@ -20,17 +20,21 @@ class Input implements m.ClassComponent<{}>{
     this.month = stream(new Date().getMonth() + 1);
     this.day = stream(new Date().getDate());
     this.listUp();
-    this.key = this.itemList == null ? 0 : this.itemList.length;
   }
-  public onbeforeupdate() {
-    this.key = this.itemList == null ? 0 : this.itemList.length;
+  public storeToLocal = () => {
+    const storeDatas = {
+      key: this.key,
+      itemList: this.itemList,
+    }
+    localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(storeDatas);
   }
   public onSubmit = () => {
     if (this.checkEmpty()) {
       this.itemList.push([this.key.toString(), this.amount() + '원', this.moneyPick(), this.incomePick(), this.detail()])
       this.key++;
+      console.log('​Input -> publiconSubmit -> this.key', this.key);
       alert('완료되었습니다.')
-      localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(this.itemList);
+      this.storeToLocal();
       this.onCancle();
     }
   }
@@ -61,16 +65,21 @@ class Input implements m.ClassComponent<{}>{
       alert('1일부터 31일 까지만 입력해주세요.')
       return;
     }
-    this.itemList = JSON.parse(localStorage.getItem(this.year + '.' + this.month + '.' + this.day));
-    if (this.itemList == null) {
+    if (localStorage.getItem(this.year + '.' + this.month + '.' + this.day) == null) {
       this.itemList = []
+      this.key = 0;
+      return;
     }
+    this.itemList = JSON.parse(localStorage.getItem(this.year + '.' + this.month + '.' + this.day)).itemList;
+    console.log('​Input -> this.itemList', JSON.parse(localStorage.getItem(this.year + '.' + this.month + '.' + this.day)));
+    this.key = JSON.parse(localStorage.getItem(this.year + '.' + this.month + '.' + this.day)).key;
+    console.log('​Input -> this.key', this.key);
   }
   private onItemDelete = (key: string): void => {
     this.itemList = this.itemList.filter(item => {
       return item[0] != key;
     })
-    localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(this.itemList);
+    this.storeToLocal();
   }
   private onItemUpdate = (key: string, amount: string, moneyPick: string, incomePick: string, detail: string): void => {
     this.itemList = this.itemList.map(item => {
@@ -79,7 +88,7 @@ class Input implements m.ClassComponent<{}>{
       }
       return item;
     })
-    localStorage[this.year + '.' + this.month + '.' + this.day] = JSON.stringify(this.itemList);
+    this.storeToLocal();
   }
   public view() {
     return (

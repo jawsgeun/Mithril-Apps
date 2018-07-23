@@ -1,8 +1,8 @@
 import * as m from 'mithril'
-import ItemViewModel from './ItemViewModel'
+import ItemModel from './ItemModel'
 
 interface ItemAttrs {
-  item: ItemViewModel;
+  item: ItemModel;
   funcDelete: Function;
   funcUpdate: Function;
 }
@@ -19,29 +19,29 @@ export default class ItemView implements m.ClassComponent<ItemAttrs>{
   private updatedIncomePick: string;
   private updatedDetail: string;
   private updateState: boolean;
-  private datas: Array<string>
+  private datas: ItemModel;
   private funcDelete: Function;
   private funcUpdate: Function;
 
   oninit(vnode: m.CVnode<ItemAttrs>) {
-    this.datas = vnode.attrs.item.getItemData();
-    this.key = this.datas[0];
-    this.amount = this.datas[1];
-    this.moneyPick = this.datas[2];
-    this.incomePick = this.datas[3];
-    this.detail = this.datas[4];
+    this.datas = vnode.attrs.item;
+    this.key = this.datas.getModelKey();
+    this.amount = this.datas.getModelAmount();
+    this.moneyPick = this.datas.getModelMoneyPick();
+    this.incomePick = this.datas.getModelIncomePick();
+    this.detail = this.datas.getModelDetail();
     this.funcDelete = vnode.attrs.funcDelete;
     this.funcUpdate = vnode.attrs.funcUpdate;
     this.updateState = false;
   }
   onbeforeupdate(vnode: m.CVnode<ItemAttrs>, old: m.CVnode<ItemAttrs>) {
-    if (vnode.attrs.item.getItemData() != old.attrs.item.getItemData() && !this.updateState) {
-      this.datas = vnode.attrs.item.getItemData();
-      this.key = this.datas[0];
-      this.amount = this.datas[1];
-      this.moneyPick = this.datas[2];
-      this.incomePick = this.datas[3];
-      this.detail = this.datas[4];
+    if (!vnode.attrs.item.isEqual(old.attrs.item)) {
+      this.datas = vnode.attrs.item;
+      this.key = this.datas.getModelKey();
+      this.amount = this.datas.getModelAmount();
+      this.moneyPick = this.datas.getModelMoneyPick();
+      this.incomePick = this.datas.getModelIncomePick();
+      this.detail = this.datas.getModelDetail();
       this.funcDelete = vnode.attrs.funcDelete;
       this.funcUpdate = vnode.attrs.funcUpdate;
     }
@@ -52,6 +52,20 @@ export default class ItemView implements m.ClassComponent<ItemAttrs>{
     this.updatedIncomePick = this.incomePick;
     this.updatedDetail = this.detail;
     this.updateState = true;
+  }
+  onUpdateMoneyPick = () => {
+    if (this.updatedMoneyPick == '현금') {
+      this.updatedMoneyPick = '카드';
+    } else {
+      this.updatedMoneyPick = '현금';
+    }
+  }
+  onUpdateIncomePick = () => {
+    if (this.updatedIncomePick == '수입') {
+      this.updatedIncomePick = '지출';
+    } else {
+      this.updatedIncomePick = '수입';
+    }
   }
   deleteItem = () => {
     this.funcDelete(this.key);
@@ -66,9 +80,9 @@ export default class ItemView implements m.ClassComponent<ItemAttrs>{
         <div>
           <h3>
             <input type='text' value={this.updatedAmount} oninput={m.withAttr('value', (v => { this.updatedAmount = v; }))} />{'  '}
-            <input type='text' value={this.updatedMoneyPick} oninput={m.withAttr('value', (v => { this.updatedMoneyPick = v; }))} />{'  '}
-            <input type='text' value={this.updatedIncomePick} oninput={m.withAttr('value', (v => { this.updatedIncomePick = v; }))} />{'  '}
-            <input type='text' value={this.updatedDetail} oninput={m.withAttr('value', (v => { this.updatedDetail = v; }))} />
+            <input type='text' value={this.updatedDetail} oninput={m.withAttr('value', (v => { this.updatedDetail = v; }))} />{'  '}
+            <button class='btn btn-success' onclick={this.onUpdateIncomePick}>{this.updatedIncomePick}</button>{'  '}
+            <button class='btn btn-warning' onclick={this.onUpdateMoneyPick}>{this.updatedMoneyPick}</button>
           </h3>
           <button onclick={this.updateItem}>수정완료</button>
         </div>
