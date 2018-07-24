@@ -4,13 +4,15 @@
   "description": "",
   "main": "app/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "supervisor": "supervisor"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.4",
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "multer": "^1.3.1",
+    "supervisor": "^0.12.0"
   }
 }
