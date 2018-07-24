@@ -1,17 +1,17 @@
-import * as m from 'mithril'
-import './SelectView.css'
-import './Input.css'
+import * as m from 'mithril';
+import './Input.css';
+import './SelectView.css';
 
 interface Attrs {
   formTitle: string;
-  subTitle: Array<string>;
-  ids: Array<string>;
-  onClickEvent: Function;
+  subTitle: string[];
+  ids: string[];
+  onClickEvent: (v: string) => void;
 }
 
 export default class SelectView implements m.ClassComponent<Attrs> {
-  __attrs: Attrs;
-  private propsFunc: Function;
+  attrs: Attrs;
+  private propsFunc: (v: string) => void;
   public oninit(vnode: m.CVnode<Attrs>) {
     this.propsFunc = vnode.attrs.onClickEvent;
   }
@@ -48,6 +48,6 @@ export default class SelectView implements m.ClassComponent<Attrs> {
           </div>
         </fieldset>
       </form>
-    )
+    );
   }
 }

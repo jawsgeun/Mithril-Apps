@@ -1,5 +1,5 @@
 {
-  "name": "MoneyManager_jaws",
+  "name": "money_manager_jaws",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -17,6 +17,7 @@
     "extract-text-webpack-plugin": "^3.0.2",
     "html-webpack-plugin": "^3.2.0",
     "style-loader": "^0.21.0",
+    "tslint": "^5.11.0",
     "typescript": "^2.9.2",
     "webpack": "^4.16.1",
     "webpack-cli": "^3.0.8",

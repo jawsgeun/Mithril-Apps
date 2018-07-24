@@ -1,34 +1,41 @@
-import * as m from 'mithril'
-import ItemModel from './ItemModel'
+import * as m from 'mithril';
+import ItemModel from './ItemModel';
 import ItemView from './ItemView';
 
 interface ListAttrs {
-  itemList: Array<Array<string>>;
-  funcDelete: Function;
-  funcUpdate: Function;
+  itemList: string[][];
+  funcDelete: (key: string) => void;
+  funcUpdate: (key: string, amount: string, moneyPick: string, incomePick: string, detail: string) => void;
 }
-export default class ItemListView implements m.ClassComponent<ListAttrs>{
-  __attrs: ListAttrs;
-  private itemList: Array<JSX.Element>;
+export default class ItemListView implements m.ClassComponent<ListAttrs> {
+  attrs: ListAttrs;
+  private itemList: string[][];
+  private isItemExist: boolean;
   public oninit(vnode: m.CVnode<ListAttrs>): void {
-    if (vnode.attrs.itemList.length == 0) {
-      this.itemList = [<div><h1>내역이 없습니다.</h1></div>];
-      return;
+    if (vnode.attrs.itemList.length === 0) {
+      this.isItemExist = false;
+    } else {
+      this.isItemExist = true;
+      this.itemList = vnode.attrs.itemList;
     }
-    this.itemList = vnode.attrs.itemList.map((v: Array<string>): JSX.Element => {
-      return <ItemView funcUpdate={vnode.attrs.funcUpdate} funcDelete={vnode.attrs.funcDelete} item={new ItemModel(v[0], v[1], v[2], v[3], v[4])} />
-    });
   }
-  public onbeforeupdate(vnode: m.CVnode<ListAttrs>): void {
-    if (vnode.attrs.itemList.length == 0) {
-      this.itemList = [<div><h1>내역이 없습니다.</h1></div>];
-      return;
+  public onbeforeupdate(vnode: m.CVnode<ListAttrs>): boolean {
+    if (vnode.attrs.itemList.length === 0) {
+      this.isItemExist = false;
+    } else {
+      this.isItemExist = true;
+      this.itemList = vnode.attrs.itemList;
     }
-    this.itemList = vnode.attrs.itemList.map((v: Array<string>): JSX.Element => {
-      return <ItemView funcUpdate={vnode.attrs.funcUpdate} funcDelete={vnode.attrs.funcDelete} item={new ItemModel(v[0], v[1], v[2], v[3], v[4])} />
-    });
+    return true;
   }
-  public view() {
-    return (this.itemList)
+  public view(vnode: m.CVnode<ListAttrs>) {
+    if (this.isItemExist) {
+      return this.itemList.map((v: string[]) => {
+        return <ItemView item={new ItemModel(v[0], v[1], v[2], v[3], v[4])}
+          funcDelete={vnode.attrs.funcDelete} funcUpdate={vnode.attrs.funcUpdate} />;
+      });
+    } else {
+      return <div><h1>내역이 없습니다.</h1></div>;
+    }
   }
 }

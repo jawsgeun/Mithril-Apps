@@ -10,19 +10,18 @@ export default class ItemModel {
     this.amount = amount;
     this.moneyPick = moneyPick;
     this.incomePick = incomePick;
-    this.detail = detail
+    this.detail = detail;
   }
-  
   public isEqual(compare: ItemModel): boolean {
-    if (this.key != compare.getModelKey()) {
+    if (this.key !== compare.getModelKey()) {
       return false;
-    } else if (this.amount != compare.getModelAmount()) {
+    } else if (this.amount !== compare.getModelAmount()) {
       return false;
-    } else if (this.moneyPick != compare.getModelMoneyPick()) {
+    } else if (this.moneyPick !== compare.getModelMoneyPick()) {
       return false;
-    } else if (this.incomePick != compare.getModelIncomePick()) {
+    } else if (this.incomePick !== compare.getModelIncomePick()) {
       return false;
-    } else if (this.detail != compare.getModelDetail()) {
+    } else if (this.detail !== compare.getModelDetail()) {
       return false;
     } else {
       return true;
