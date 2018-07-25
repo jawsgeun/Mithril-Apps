@@ -32,20 +32,21 @@ export default class SelectView implements m.ClassComponent<Attrs> {
     }
   }
   public view(vnode: m.CVnode<Attrs>) {
+    const radioElement = [];
+    for (let i: number = 0; i < vnode.attrs.ids.length; i++) {
+      radioElement.push(
+        <div>
+          <input type='radio' value={vnode.attrs.ids[i]} name='radio' onchange={m.withAttr('value', this.onClick)} />
+          &nbsp;&nbsp;
+          <label class='radio_label'>{vnode.attrs.subTitle[i]}</label>
+        </div>,
+      );
+    }
     return (
       <form className='form_select'>
         <fieldset>
           <label class='input_label'>{vnode.attrs.formTitle}</label>
-          <div>
-            <input type='radio' value={vnode.attrs.ids[0]} name='radio' onchange={m.withAttr('value', this.onClick)} />
-            &nbsp;&nbsp;
-            <label class='radio_label'>{vnode.attrs.subTitle[0]}</label>
-          </div>
-          <div>
-            <input type='radio' value={vnode.attrs.ids[1]} name='radio' onchange={m.withAttr('value', this.onClick)} />
-            &nbsp;&nbsp;
-            <label class='radio_label'>{vnode.attrs.subTitle[1]}</label>
-          </div>
+          {radioElement}
         </fieldset>
       </form>
     );
