@@ -44,6 +44,7 @@ export default class ItemView implements m.ClassComponent<ItemAttrs> {
       this.detail = this.datas.getModelDetail();
       this.funcDelete = vnode.attrs.funcDelete;
       this.funcUpdate = vnode.attrs.funcUpdate;
+      this.updateState = false;
       return true;
     }
     if (this.updateState) {
@@ -78,7 +79,6 @@ export default class ItemView implements m.ClassComponent<ItemAttrs> {
   }
   updateItem = () => {
     this.funcUpdate(this.key, this.updatedAmount, this.updatedMoneyPick, this.updatedIncomePick, this.updatedDetail);
-    this.updateState = false;
   }
   view() {
     if (this.updateState) {
