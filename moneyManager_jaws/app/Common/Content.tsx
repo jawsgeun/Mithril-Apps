@@ -1,5 +1,5 @@
-import * as m from 'mithril'
-import Header from './Header'
+import * as m from 'mithril';
+import Header from './Header';
 
 class Content implements m.ClassComponent<{}> {
   view(vnode) {
@@ -8,7 +8,7 @@ class Content implements m.ClassComponent<{}> {
         <Header />
         {vnode.children}
       </div>
-    )
+    );
   }
 }
 

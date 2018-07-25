@@ -15,8 +15,8 @@ export default class SelectView implements m.ClassComponent<Attrs> {
   public oninit(vnode: m.CVnode<Attrs>) {
     this.propsFunc = vnode.attrs.onClickEvent;
   }
-  private onClick = (e: KeyboardEvent): void => {
-    switch ((e.target as HTMLInputElement).id) {
+  private onClick = (v: string): void => {
+    switch (v) {
       case 'cash':
         this.propsFunc('현금');
         break;
@@ -37,12 +37,12 @@ export default class SelectView implements m.ClassComponent<Attrs> {
         <fieldset>
           <label class='input_label'>{vnode.attrs.formTitle}</label>
           <div>
-            <input type='radio' id={vnode.attrs.ids[0]} name='radio' onchange={this.onClick} />
+            <input type='radio' value={vnode.attrs.ids[0]} name='radio' onchange={m.withAttr('value', this.onClick)} />
             &nbsp;&nbsp;
             <label class='radio_label'>{vnode.attrs.subTitle[0]}</label>
           </div>
           <div>
-            <input type='radio' id={vnode.attrs.ids[1]} name='radio' onchange={this.onClick} />
+            <input type='radio' value={vnode.attrs.ids[1]} name='radio' onchange={m.withAttr('value', this.onClick)} />
             &nbsp;&nbsp;
             <label class='radio_label'>{vnode.attrs.subTitle[1]}</label>
           </div>
