@@ -25,7 +25,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/upload', upload.single('myfile'), function(req, res){
-  res.send('Uploaded! : '+req.file); // object를 리턴함
+  res.send(req.file); // object를 리턴함
   console.log(req.file); // 콘솔(터미널)을 통해서 req.file Object 내용 확인 가능.
 });
 

@@ -1,30 +1,31 @@
-import * as m from 'mithril'
+import * as m from 'mithril';
 
-interface IAttrs {
+interface Attrs {
   attr: string;
 }
-export default class SampleComponent implements m.ClassComponent<IAttrs>{
-  __attrs: IAttrs;
+export default class SampleComponent implements m.ClassComponent<Attrs> {
+  attrs: Attrs;
   private onUpload = (v: File[]): void => {
     const file: File = v[0];
-    console.log(file);
 
-    let data = new FormData();
+    const data = new FormData();
     data.append('myfile', file);
 
-    const promise: Promise<any> = m.request({
+    const promise: Promise<{}> = m.request({
       method: 'POST',
       url: 'http://localhost:3000/upload',
-      data: data,
-    })
-    console.log(promise);
+      data,
+    });
+    promise.then(() => {
+      console.log('helll');
+    });
   }
-  view(vnode: m.CVnode<IAttrs>) {
+  view(vnode: m.CVnode<Attrs>) {
     return (<div>
       <form>
         <input type='file' onchange={m.withAttr('files', this.onUpload)} />
       </form>
     </div>
-    )
+    );
   }
 }
