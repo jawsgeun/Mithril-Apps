@@ -21,6 +21,7 @@ class Input implements m.ClassComponent<{}> {
   private key: number;
 
   public oninit() {
+    console.log('tnrms');
     this.year = stream(new Date().getFullYear());
     this.month = stream(new Date().getMonth() + 1);
     this.day = stream(new Date().getDate());
