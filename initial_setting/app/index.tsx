@@ -1,8 +1,8 @@
 /// <reference path='index.d.ts'/>
 
 import * as m from 'mithril';
-import SampleComponent from './SampleComponent'
 import './index.css';
+import SampleComponent from './SampleComponent';
 
 class App implements m.ClassComponent<{}> {
     view() {
