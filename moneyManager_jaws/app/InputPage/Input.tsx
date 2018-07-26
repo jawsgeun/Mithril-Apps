@@ -14,6 +14,7 @@ class Input implements m.ClassComponent<{}> {
   private moneyPick: stream.Stream<string> = stream('');
   private incomePick: stream.Stream<string> = stream('');
   private detail: stream.Stream<string> = stream('');
+  private radioSelect: stream.Stream<string> = stream('');
   private itemList: string[][];
   private year: stream.Stream<number>;
   private month: stream.Stream<number>;
@@ -24,6 +25,20 @@ class Input implements m.ClassComponent<{}> {
     this.year = stream(new Date().getFullYear());
     this.month = stream(new Date().getMonth() + 1);
     this.day = stream(new Date().getDate());
+    this.incomePick = this.radioSelect.map((v: string) => {
+      if (v === 'income') {
+        return '수입';
+      } else {
+        return '지출';
+      }
+    });
+    this.moneyPick = this.radioSelect.map((v: string) => {
+      if (v === 'cash') {
+        return '현금';
+      } else {
+        return '카드';
+      }
+    });
     this.listUp();
   }
   public storeToLocal = () => {
@@ -105,9 +120,9 @@ class Input implements m.ClassComponent<{}> {
           <input type='number' class='form-control' className='money_input' value={this.amount()}
             oninput={m.withAttr('value', this.amount)} placeholder='금액을 입력하세요' />&nbsp;원
         </div>
-        <SelectView formTitle='카드/현금 선택' subTitle={['카드', '현금']} ids={['credit', 'cash']} onClickEvent={this.moneyPick} />
+        <SelectView formTitle='카드/현금 선택' subTitle={['카드', '현금']} ids={['credit', 'cash']} onClickEvent={this.radioSelect} />
         <hr />
-        <SelectView formTitle='수입/지출 선택' subTitle={['수입', '지출']} ids={['income', 'outcome']} onClickEvent={this.incomePick} />
+        <SelectView formTitle='수입/지출 선택' subTitle={['수입', '지출']} ids={['income', 'outcome']} onClickEvent={this.radioSelect} />
         <label class='input_label' >상세 정보 입력</label><br />
         <textarea rows='3' cols='50' value={this.detail()}
           oninput={m.withAttr('value', this.detail)} placeholder='상세정보를 입력하세요.' />
