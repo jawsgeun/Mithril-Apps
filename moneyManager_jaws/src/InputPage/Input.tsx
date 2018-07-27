@@ -2,7 +2,7 @@ import * as m from 'mithril';
 import * as stream from 'mithril/stream';
 import './Input.css';
 import ItemListView from './ItemListView';
-import SelectView from './SelectView';
+import SelectView from './SelectView/SelectView';
 
 interface IdataFormat {
   key: number;

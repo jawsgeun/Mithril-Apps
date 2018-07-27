@@ -1,5 +1,5 @@
 import * as m from 'mithril';
-import './Input.css';
+import '../Input.css';
 import './SelectView.css';
 
 interface Attrs {
