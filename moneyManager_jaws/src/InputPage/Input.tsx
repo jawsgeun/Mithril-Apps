@@ -9,6 +9,11 @@ interface IdataFormat {
   itemList: string[][];
 }
 
+export interface Selection {
+  title: string;
+  id: string;
+}
+
 class Input implements m.ClassComponent<{}> {
   private amount: stream.Stream<string> = stream('');
   private moneyPick: stream.Stream<string> = stream('');
@@ -20,6 +25,8 @@ class Input implements m.ClassComponent<{}> {
   private month: stream.Stream<number>;
   private day: stream.Stream<number>;
   private key: number;
+  private moneySelection: Selection[];
+  private incomeSelection: Selection[];
 
   public oninit() {
     this.year = stream(new Date().getFullYear());
@@ -39,6 +46,26 @@ class Input implements m.ClassComponent<{}> {
         return '카드';
       }
     });
+    this.moneySelection = [
+      {
+      title: '현금',
+      id: 'cash',
+      },
+      {
+        title: '카드',
+        id: 'credit',
+      },
+    ];
+    this.incomeSelection = [
+      {
+      title: '수입',
+      id: 'income',
+      },
+      {
+        title: '지출',
+        id: 'outcome',
+      },
+    ];
     this.listUp();
   }
   public storeToLocal = () => {
@@ -120,9 +147,9 @@ class Input implements m.ClassComponent<{}> {
           <input type='number' class='form-control' className='money_input' value={this.amount()}
             oninput={m.withAttr('value', this.amount)} placeholder='금액을 입력하세요' />&nbsp;원
         </div>
-        <SelectView formTitle='카드/현금 선택' subTitle={['카드', '현금']} ids={['credit', 'cash']} onClickEvent={this.radioSelect} />
+        <SelectView formTitle='카드/현금 선택' titleData={this.moneySelection} onClickEvent={this.radioSelect} />
         <hr />
-        <SelectView formTitle='수입/지출 선택' subTitle={['수입', '지출']} ids={['income', 'outcome']} onClickEvent={this.radioSelect} />
+        <SelectView formTitle='수입/지출 선택' titleData={this.incomeSelection} onClickEvent={this.radioSelect} />
         <label class='input_label' >상세 정보 입력</label><br />
         <textarea rows='3' cols='50' value={this.detail()}
           oninput={m.withAttr('value', this.detail)} placeholder='상세정보를 입력하세요.' />

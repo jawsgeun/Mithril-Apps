@@ -1,11 +1,11 @@
 import * as m from 'mithril';
+import { Selection } from '../Input';
 import '../Input.css';
 import './SelectView.css';
 
 interface Attrs {
   formTitle: string;
-  subTitle: string[];
-  ids: string[];
+  titleData: Selection[];
   onClickEvent: (v: string) => void;
 }
 
@@ -17,12 +17,12 @@ export default class SelectView implements m.ClassComponent<Attrs> {
   }
   public view(vnode: m.CVnode<Attrs>) {
     const radioElement = [];
-    for (let i: number = 0; i < vnode.attrs.ids.length; i++) {
+    for (const val of vnode.attrs.titleData) {
       radioElement.push(
         <div>
-          <input type='radio' value={vnode.attrs.ids[i]} name='radio' onchange={m.withAttr('value', this.propsFunc)} />
+          <input type='radio' value={val.id} name='radio' onchange={m.withAttr('value', this.propsFunc)} />
           &nbsp;&nbsp;
-          <label class='radio_label'>{vnode.attrs.subTitle[i]}</label>
+          <label class='radio_label'>{val.title}</label>
         </div>,
       );
     }
