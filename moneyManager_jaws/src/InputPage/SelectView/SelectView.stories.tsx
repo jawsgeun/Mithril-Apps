@@ -5,7 +5,7 @@ import withBackgrounds from '@storybook/addon-backgrounds/mithril';
 import { text, withKnobs } from '@storybook/addon-knobs/mithril';
 import { storiesOf } from '@storybook/mithril';
 import * as m from 'mithril';
-import SelectView from '../InputPage/SelectView/SelectView';
+import SelectView from './SelectView';
 
 const formTitle = '카드/현금 선택';
 const subTitle = ['카드', '현금'];
